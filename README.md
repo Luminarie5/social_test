@@ -6,7 +6,7 @@
 [Источник: syntone.ru](http://syntone.ru/psytesty/vash-uroven-obshhitelnosti/)
 
 ### Использование
-ruby social_test.rb
+`ruby social_test.rb`
 
 ### Автор
 Павел Шубин
