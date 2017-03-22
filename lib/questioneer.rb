@@ -1,32 +1,29 @@
 class Questioneer
   attr_reader :remaining_questions
+
   require 'unicode_utils/downcase'
   require 'yaml'
 
+  PHRASES = YAML::load(open('./config/PHRASES.yml'))
+
   def initialize
-    @questions           = take_data_from_file('questions')
+    @questions = take_data_from_file('questions')
     @remaining_questions = @questions.length
-    @results             = take_data_from_file('results')
-    @comments            = YAML::load(open('./config/comments.yml'))
-    @user_name           = @comments['default_name']
+    @results = take_data_from_file('results')
+    @user_name = if ARGV[0] != nil
+                   ARGV[0].encode('UTF-8')
+                 else
+                   PHRASES['default_name']
+                 end
   end
 
   def take_data_from_file(data_name)
-    current_path = File.dirname(__FILE__)
-    file_path    = current_path + "/../data/#{data_name}.txt"
-    f            = File.new(file_path, 'r:UTF-8')
-    data         = f.readlines.each { |line| line.chomp! }
-    f.close
-    data
-  end
-
-  def name_the_user
-    @user_name = ARGV[0].encode('UTF-8') if ARGV[0] != nil
+    file_path = "#{File.dirname(__FILE__)}/../data/#{data_name}.txt"
+    File.readlines(file_path, encoding: 'UTF-8').map { |l| l.chomp }
   end
 
   def greetings
-    name_the_user
-    puts @user_name + @comments['greetings'] + @comments['ask'] + "\n\n"
+    puts "#{@user_name}#{PHRASES['greetings']}\n\n"
   end
 
   def ask
@@ -36,20 +33,19 @@ class Questioneer
 
   def check_answer
     loop do
-      puts @comments['answer_type'] +
-             "#{@comments['anwer_yes']}, #{@comments['anwer_no']}, #{@comments['anwer_sometimes']}"
+      puts PHRASES['answer_type'] +
+             "#{PHRASES['anwer_yes']}, #{PHRASES['anwer_no']}, #{PHRASES['anwer_sometimes']}"
       user_input = UnicodeUtils.downcase(STDIN.gets.chomp.encode('utf-8'), :ru)
 
-      return :yes if user_input == @comments['anwer_yes']
-      return :no if user_input == @comments['anwer_no']
-      return :sometimes if user_input == @comments['anwer_sometimes']
+      case user_input
+      when PHRASES['anwer_yes'] then return :yes
+      when PHRASES['anwer_no'] then return :no
+      when PHRASES['anwer_sometimes'] then return :sometimes
+      end
     end
   end
 
   def show_test_result(points, result_number)
-    puts
-    puts @user_name
-    puts @comments['result_message'] + points.to_s
-    puts @results[result_number]
+    puts "\n#{@user_name}\n#{PHRASES['result_message']}#{points.to_s}\n#{@results[result_number]}"
   end
 end

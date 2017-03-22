@@ -1,6 +1,6 @@
 # name: "Тест - Ваш уровень общительности"
 # author: Shubin Pavlik
-# version: 3.3
+# version: 3.4
 
 # ruby_version: 2.3
 # encoding: utf-8
