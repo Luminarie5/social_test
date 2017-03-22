@@ -1,19 +1,14 @@
 # name: "Тест - Ваш уровень общительности"
 # author: Shubin Pavlik
-# version: 3.2
+# version: 3.3
 
 # ruby_version: 2.3
 # encoding: utf-8
 # source: http://syntone.ru/psytesty/vash-uroven-obshhitelnosti/
 
-begin
-  require_relative 'lib/questioneer.rb'
-  require_relative 'lib/score.rb'
-rescue Exception => error
-  puts 'lib error'
-  puts error.message
-  exit
-end
+
+require_relative 'lib/questioneer'
+require_relative 'lib/score'
 
 score       = Score.new
 questioneer = Questioneer.new
