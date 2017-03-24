@@ -10,7 +10,7 @@
 require_relative 'lib/questioneer'
 require_relative 'lib/score'
 
-score       = Score.new
+score = Score.new
 questioneer = Questioneer.new
 
 questioneer.greetings

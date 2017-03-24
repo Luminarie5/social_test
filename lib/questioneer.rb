@@ -1,16 +1,18 @@
+# ruby_version: 2.3
+# encoding: utf-8
 class Questioneer
   attr_reader :remaining_questions
 
   require 'unicode_utils/downcase'
   require 'yaml'
 
-  PHRASES = YAML::load(open('./config/PHRASES.yml'))
+  PHRASES = YAML.safe_load(open('./config/PHRASES.yml'))
 
   def initialize
     @questions = take_data_from_file('questions')
     @remaining_questions = @questions.length
     @results = take_data_from_file('results')
-    @user_name = if ARGV[0] != nil
+    @user_name = if !ARGV[0].nil?
                    ARGV[0].encode('UTF-8')
                  else
                    PHRASES['default_name']
@@ -19,7 +21,7 @@ class Questioneer
 
   def take_data_from_file(data_name)
     file_path = "#{File.dirname(__FILE__)}/../data/#{data_name}.txt"
-    File.readlines(file_path, encoding: 'UTF-8').map { |l| l.chomp }
+    File.readlines(file_path, encoding: 'UTF-8').map(&:chomp)
   end
 
   def greetings
@@ -33,8 +35,8 @@ class Questioneer
 
   def check_answer
     loop do
-      puts PHRASES['answer_type'] +
-             "#{PHRASES['anwer_yes']}, #{PHRASES['anwer_no']}, #{PHRASES['anwer_sometimes']}"
+      puts PHRASES['answer_type'] + PHRASES['anwer_yes'] + ',' +
+             PHRASES['anwer_no'] + ',' + PHRASES['anwer_sometimes']
       user_input = UnicodeUtils.downcase(STDIN.gets.chomp.encode('utf-8'), :ru)
 
       case user_input
@@ -46,6 +48,9 @@ class Questioneer
   end
 
   def show_test_result(points, result_number)
-    puts "\n#{@user_name}\n#{PHRASES['result_message']}#{points.to_s}\n#{@results[result_number]}"
+    puts
+    puts @user_name
+    puts "#{PHRASES['result_message']}#{points}"
+    puts @results[result_number]
   end
 end
